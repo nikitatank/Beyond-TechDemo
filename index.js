@@ -1,24 +1,35 @@
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017";
-var assert = require('assert')
-const db = 'userdata';
-const client = new MongoClient(url, {useUnifiedTopology: true});
-
-client.connect(function (err){
-assert.equal(null,err)
-    const database = client.db(db)
-    console.log("Database name is " + database.databaseName)
-    client.close()
-});
+var xhr = new XMLHttpRequest();
 
 
-function onButtonClick(){
-        var x = document.getElementById("textInput").value;
-        document.getElementById("note").innerHTML = x;
+function onSubmitEmailClick(){
+        var x = document.getElementById("email").value;
+        console.log(`data that we typed in html file is ${x}`)
+        xhr.open("POST", 'http://localhost:3000/eml', true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send('app.js')
+        xhr.onload = function (){
+                console.log(xhr.response)  // res.send respone.
 
+
+               // d = document.createElement("label, text, button ")
+                //d.innerHTML()
+                //mighht create a table and put notes thete
+        }
+
+        //document.getElementById("note").innerHTML = x;
+        // /email ->notes.html
+        //send post reqest to server that will pass data to app.js -> email
+//create button  and text
 }
 
-function pullDatafromDb()
-{
+
+
+function onButtonClickNote(){
+        var x = document.getElementById("textInput").value;
+        document.getElementById("note").innerHTML = x;
+}
+
+
+function pullDatafromDb() {
 
 }
