@@ -4,9 +4,9 @@ var xhr = new XMLHttpRequest();
 function onSubmitEmailClick(){
         var x = document.getElementById("email").value;
         console.log(`data that we typed in html file is ${x}`)
-        xhr.open("POST", 'http://localhost:3000/eml', true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send('app.js')
+        xhr.open("POST", 'http://localhost:3000/email', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send({email: x})
         xhr.onload = function (){
                 console.log(xhr.response)  // res.send respone.
 

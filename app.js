@@ -34,14 +34,13 @@ const dbo = MongoClient.connect(url, function(err, db) {
     // })
 });
 
-app.post('http://localhost:3000/eml', (req,res)=>{
+app.post('/email', (req,res)=>{
     const data = req.body
     console.log(data)
 
 
     //code for is data is prensent in db or not and take action accordingly and get the notes and return
-
-    res.send(note)
+    res.send(200)
 });
 
 
