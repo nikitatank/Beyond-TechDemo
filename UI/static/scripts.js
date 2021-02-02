@@ -26,15 +26,17 @@ var xhr = new window.XMLHttpRequest();
 
 
 
-function send () {
-        var number = {
-        value: document.getElementById('num').value
+function onSubmitEmailClick() {
+        var email = {
+        email: document.getElementById('email').value,
+                note : []
 }
-        console.log(number.value)
+        //var email = {email:document.getElementById('email').value}
+        console.log(email)
         var xhr = new window.XMLHttpRequest()
-        xhr.open('POST', 'http://localhost:3000/num', true)
+        xhr.open('POST', 'http://localhost:3000/email', true)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-        xhr.send(JSON.stringify(number))
+        xhr.send(JSON.stringify(email))
 }
 
 function onButtonClickNote(){
