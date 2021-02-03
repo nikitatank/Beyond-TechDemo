@@ -19,22 +19,42 @@ const url ="mongodb+srv://wgubeyond:Samp2020!@cluster0.xdjyg.mongodb.net/tech-de
 
 
 
-app.post('/email', function (req, res) {
+app.post('/email', async function (req, res) {
     var email = req.body
+    var em = email['email']
     console.log(email)
-    const data = MongoClient.connect(url, {useUnifiedTopology:true},(err, client) =>{
-        if (err) return console.error(err)
-        //return  db.db("userdata")
-        console.log("connected to database");
-        const db = client.db('tech-demo')
-        const notes = db.collection('notes')
-        notes.insertOne(email)
+    async function findOne() {
+        const client = await MongoClient.connect(url, { useNewUrlParser: true,useUnifiedTopology:true})
+            .catch(err => { console.log(err); });
+        if (!client) {
+            return;
+        }
+        try {
+            const db = client.db("tech-demo");
+            let collection = db.collection('notes');
+            let res = await collection.find({email:em},{'_id':1}).toArray();
+            console.log('result of the query is ')
+            console.log(res);
+            if(Array.isArray(res) && res.length === 0){
+               let ins =  await collection.insertOne(email)
+                console.log(`insterd one data ${ins}`)
+            }
 
-    });
-   // return res.end('done')
+        } catch (err) {
+            console.log(err);
+
+        } finally {
+            client.close();
+        }
+    }
+
+    findOne();
+
+
+
+    return res.end('done')
     //return res.render("view","locals") //view-> name if hte file we ar erendersing  , locals -> data passsed in the file
 })
-
 
 
 

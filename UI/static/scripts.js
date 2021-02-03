@@ -36,7 +36,15 @@ function onSubmitEmailClick() {
         var xhr = new window.XMLHttpRequest()
         xhr.open('POST', 'http://localhost:3000/email', true)
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        xhr.onreadystatechange = () => {
+                if(xhr.readyState === 4 && xhr.status === 200) {
+                        console.log(xhr.responseText)
+                }
+        }
         xhr.send(JSON.stringify(email))
+
+        //xhr.response()
+
 }
 
 function onButtonClickNote(){
