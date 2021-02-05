@@ -38,7 +38,9 @@ function onSubmitEmailClick() {
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         xhr.onreadystatechange = () => {
                 if(xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("response from server")
                         console.log(xhr.responseText)
+
                 }
         }
         xhr.send(JSON.stringify(email))
@@ -47,10 +49,30 @@ function onSubmitEmailClick() {
 
 }
 
-function onButtonClickNote(){
-        var x = document.getElementById("textInput").value;
-        document.getElementById("note").innerHTML = x;
-}
+function displyNotes(){
+
+        var btn = document.createElement("BUTTON");
+        var add = document.createTextNode("ADD");
+        btn.appendChild(add);
+        document.body.appendChild(btn);
+
+        var note = document.createElement("INPUT");
+        note.setAttribute("type", "text");
+        document.body.appendChild(note);
+
+
+        const x = document.createElement("table")
+        x.setAttribute("id", table)
+        document.body.appendChild(x)
+
+        const y = document.createElement("tr")
+        y.setAttribute('id',row)
+        document.getElementById("table").appendChild(y)
+
+        const z = document.createElement("td")
+
+
+        }
 
 
 function pullDatafromDb() {

@@ -23,22 +23,26 @@ app.post('/email', async function (req, res) {
     var email = req.body
     var em = email['email']
     console.log(email)
-    async function findOne() {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true,useUnifiedTopology:true})
-            .catch(err => { console.log(err); });
-        if (!client) {
-            return;
+    const client = await MongoClient.connect(url, { useNewUrlParser: true,useUnifiedTopology:true})
+        .catch(err => { console.log(err); });
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db("tech-demo");
+        let collection = db.collection('notes');
+        let resp = await collection.find({email:em}).toArray();
+        console.log('result of the query is ')
+        console.log(resp);
+
+        if(Array.isArray(resp) && resp.length === 0){
+            let ins =  await collection.insertOne(email)
+            console.log(`insterd one data ${ins}`)
+            return res.send(ins)
         }
-        try {
-            const db = client.db("tech-demo");
-            let collection = db.collection('notes');
-            let res = await collection.find({email:em},{'_id':1}).toArray();
-            console.log('result of the query is ')
-            console.log(res);
-            if(Array.isArray(res) && res.length === 0){
-               let ins =  await collection.insertOne(email)
-                console.log(`insterd one data ${ins}`)
-            }
+        else {
+            return res.send(resp)
+        }
 
         } catch (err) {
             console.log(err);
@@ -46,13 +50,8 @@ app.post('/email', async function (req, res) {
         } finally {
             client.close();
         }
-    }
 
-    findOne();
-
-
-
-    return res.end('done')
+    //return res.end('done')
     //return res.render("view","locals") //view-> name if hte file we ar erendersing  , locals -> data passsed in the file
 })
 
