@@ -56,4 +56,10 @@ app.post('/email', async function (req, res) {
 })
 
 
+app.post('/add',  function (req, res){
+    const data = req.body
+    console.log('notes received from browser is ')
+    console.log('data')
 
+
+})
