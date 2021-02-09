@@ -88,9 +88,9 @@ app.post('/deletenote',async function (req,res){
     console.log("data received after clicking on x")
     const data = JSON.parse(JSON.stringify(req.body))
     //console.log(req.body)
-    console.log(data['index'])
-    const x = data['index']
-    console.log(data)
+    console.log(data['note'])
+    const nt = data['note']
+
 
     const client = await MongoClient.connect(url, { useNewUrlParser: true,useUnifiedTopology:true})
         .catch(err => { console.log(err); });
@@ -101,10 +101,12 @@ app.post('/deletenote',async function (req,res){
         const db = client.db("tech-demo");
         let collection = db.collection('notes');
         //let d = await collection.find({email:em}).toArray()
-        //let resp = await collection.update({}, {$unset : {[arrIndex] : 1 }});
-       // let resp = await collection.find({email:em}).toArray();
+        await collection.updateOne({email:data['email']}, {$pull : {'note' : nt }});
+        let d = await collection.find({email:data['email']}).toArray()
         console.log('result of the query is ')
-        console.log(data);
+        console.log(d);
+        return res.send(d)
+
 
 
     } catch (err) {

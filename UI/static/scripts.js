@@ -73,6 +73,8 @@ function addNotes(notes, em){
 
 }
 function displayNotes(nts) {
+        console.log("checking note is null or not")
+        console.log(nts)
         const notes = nts[0].note
         const em = nts[0].email
         var tbl = document.createElement("table");
@@ -98,14 +100,15 @@ function displayNotes(nts) {
                         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
                         xhr.onreadystatechange = () => {
                                 if(xhr.readyState === 4 && xhr.status === 200) {
-                                        console.log("response from server after addding note")
+                                        console.log("response from server after deleting note")
                                         console.log(xhr.responseText)
-                                        //displayNotes(JSON.parse(xhr.responseText))
+                                        clearTable()
+                                        displayNotes(JSON.parse(xhr.responseText))
                                 }
                         }
                         console.log(notes[i])
                         var inx = {
-                                index: i,
+                                note: notes[i],
                                 email: em
                         }
                         xhr.send(JSON.stringify(inx))
