@@ -15,7 +15,7 @@ function onSubmitEmailClick() {
                         console.log("response from server")
                         console.log(xhr.responseText)
                         clearView() //clear html and put emply div
-                        displyNotes(xhr.responseText)
+                        addNotes(xhr.responseText, email['email'])
                 }
         }
         xhr.send(JSON.stringify(email))
@@ -28,7 +28,7 @@ function clearView(){
 }
 
 
-function displyNotes(notes){
+function addNotes(notes, em){
         var note = document.createElement("INPUT");
         note.setAttribute("type", "text");
         note.setAttribute('id',"note_text")
@@ -41,37 +41,79 @@ function displyNotes(notes){
         btn_add.appendChild(add);
         document.body.appendChild(btn_add);
         btn_add.addEventListener("click",function (){
-                console.log(note.value)
+                var x = document.getElementById('note_text').value
+                xhr.open('POST', 'http://localhost:3000/addnote', true)
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')//application/x-www-form-urlencoded
+                xhr.onreadystatechange = () => {
+                        if(xhr.readyState === 4 && xhr.status === 200) {
+                                console.log("response from server after addding note")
+                                console.log(xhr.responseText)
+                                displayNotes(JSON.parse(xhr.responseText))
+                        }
+                }
+                var data = {
+                        email:em,
+                        note:x
+                }
+                xhr.send(JSON.stringify(data))
+
+                //console.log(Object.keys(data))
         })
 
+
+}
+function displayNotes(nts) {
+        const notes = nts[0].note
+        const em = nts[0].email
         var tbl = document.createElement("table");
         var tblBody = document.createElement("tbody");
 
+        for(let i = 0; i<notes.length; i++) {
+                console.log(notes[i])
 
-        const row = document.createElement("tr");
+                const row = document.createElement("tr");
 
-        const nt = document.createElement("td");
-        const note1 = document.createTextNode("note_text");
-        nt.appendChild(note1);
-        row.appendChild(nt);
+                const nt = document.createElement("td");
+                const note1 = document.createTextNode(notes[i]);
+                //const index = i
+                nt.appendChild(note1);
+                row.appendChild(nt);
 
-        const ntb = document.createElement("td");
-        const btn = document.createElement("BUTTON");
-        const btn_nm = document.createTextNode("X");
-        btn.addEventListener('click',function (){
-                console.log(notes.type)
-        })
-        //on click button of clear it should remove that note
-        btn.appendChild(btn_nm);
-        ntb.appendChild(btn)
-        row.appendChild(ntb)
+                const ntb = document.createElement("td");
+                const btn = document.createElement("BUTTON");
+                const btn_nm = document.createTextNode("X");
+                btn.addEventListener('click', function () {
+                        xhr.open('POST', 'http://localhost:3000/deletenote', true)
+                        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+                        xhr.onreadystatechange = () => {
+                                if(xhr.readyState === 4 && xhr.status === 200) {
+                                        console.log("response from server after addding note")
+                                        console.log(xhr.responseText)
+                                        //displayNotes(JSON.parse(xhr.responseText))
+                                }
+                        }
+                        console.log(notes[i])
+                        var inx = {
+                                index: i,
+                                email: em
+                        }
+                        xhr.send(JSON.stringify(inx))
+
+                        console.log(`delete the note at index ${i}`)
+                })
 
 
-        tblBody.appendChild(row);
+                btn.appendChild(btn_nm);
+                ntb.appendChild(btn)
+                row.appendChild(ntb)
+
+
+                tblBody.appendChild(row);
+
+        }
         tbl.appendChild(tblBody);
         document.body.appendChild(tbl)
 
-}
-function pullDatafromDb() {
-        console.log("clicked on add buttn")
+        console.log("clicked on add button")
+       // console.log(nts[0].note)
 }

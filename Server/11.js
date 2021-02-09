@@ -47,7 +47,8 @@ app.post('/email', async function (req, res) {
         } catch (err) {
             console.log(err);
 
-        } finally {
+        }
+    finally {
             client.close();
         }
 
@@ -56,10 +57,60 @@ app.post('/email', async function (req, res) {
 })
 
 
-app.post('/add',  function (req, res){
-    const data = req.body
+app.post('/addnote',  async function (req, res){
+    const data = JSON.parse(JSON.stringify(req.body))
     console.log('notes received from browser is ')
-    console.log('data')
+
+    let em = data['email']
+    let nt = data['note']
+
+    const client = await MongoClient.connect(url, { useNewUrlParser: true,useUnifiedTopology:true})
+        .catch(err => { console.log(err); });
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db("tech-demo");
+        let collection = db.collection('notes');
+        await collection.updateOne({email:em},{$push:{'note':nt}});
+        let d = await collection.find({email:em}).toArray()
+        console.log('result of the query is ')
+        console.log(d);
+        return res.send(d)
+
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+
+app.post('/deletenote',async function (req,res){
+    console.log("data received after clicking on x")
+    const data = JSON.parse(JSON.stringify(req.body))
+    //console.log(req.body)
+    console.log(data['index'])
+    const x = data['index']
+    console.log(data)
+
+    const client = await MongoClient.connect(url, { useNewUrlParser: true,useUnifiedTopology:true})
+        .catch(err => { console.log(err); });
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db("tech-demo");
+        let collection = db.collection('notes');
+        //let d = await collection.find({email:em}).toArray()
+        //let resp = await collection.update({}, {$unset : {[arrIndex] : 1 }});
+       // let resp = await collection.find({email:em}).toArray();
+        console.log('result of the query is ')
+        console.log(data);
+
+
+    } catch (err) {
+        console.log(err);
+
+    }
 
 
 })
