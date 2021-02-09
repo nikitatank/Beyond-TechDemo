@@ -16,6 +16,7 @@ function onSubmitEmailClick() {
                         console.log(xhr.responseText)
                         clearView() //clear html and put emply div
                         addNotes(xhr.responseText, email['email'])
+                        displayNotes(JSON.parse(xhr.responseText))
                 }
         }
         xhr.send(JSON.stringify(email))
@@ -27,8 +28,13 @@ function clearView(){
         c_div.remove()
 }
 
+function clearTable(){
+        const x = document.getElementById('table')
+        x.remove()
+}
 
 function addNotes(notes, em){
+
         var note = document.createElement("INPUT");
         note.setAttribute("type", "text");
         note.setAttribute('id',"note_text")
@@ -48,6 +54,7 @@ function addNotes(notes, em){
                         if(xhr.readyState === 4 && xhr.status === 200) {
                                 console.log("response from server after addding note")
                                 console.log(xhr.responseText)
+                                clearTable()
                                 displayNotes(JSON.parse(xhr.responseText))
                         }
                 }
@@ -55,7 +62,10 @@ function addNotes(notes, em){
                         email:em,
                         note:x
                 }
+
                 xhr.send(JSON.stringify(data))
+
+
 
                 //console.log(Object.keys(data))
         })
@@ -66,8 +76,9 @@ function displayNotes(nts) {
         const notes = nts[0].note
         const em = nts[0].email
         var tbl = document.createElement("table");
+        tbl.setAttribute('id',"table")
         var tblBody = document.createElement("tbody");
-
+        if (notes.length > 0){
         for(let i = 0; i<notes.length; i++) {
                 console.log(notes[i])
 
@@ -110,6 +121,7 @@ function displayNotes(nts) {
 
                 tblBody.appendChild(row);
 
+        }
         }
         tbl.appendChild(tblBody);
         document.body.appendChild(tbl)
